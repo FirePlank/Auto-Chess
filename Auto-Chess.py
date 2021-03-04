@@ -9,10 +9,10 @@ import pyscreenshot
 from chesstenso import tensorflow_chessbot
 from chesstenso import chessboard_finder
 
-wait_interval = 1.5 # The wait time between taking screenshots
+wait_interval = 0.5 # The wait time between taking screenshots and retrying commands
 engine_path = r"C:\Users\FirePlank\Desktop\Coding\General Python Scripts\stockfish_13_win_x64_bmi2\stockfish_13_win_x64_bmi2.exe" # The absolute path to the engine executable
 engine = chess.engine.SimpleEngine.popen_uci(engine_path)
-engine_think_time = 0.2 # <----- The higher this value is the better the engine plays
+engine_think_time = 0.1 # <----- The higher this value is the better the engine plays
 
 os.chdir('chesstenso')
 who = input("Are you playing as white or black?: ")
@@ -32,13 +32,17 @@ while True:
     try:
         result = tensorflow_chessbot.main(img=r'Photos\board.png', active=who, unflip=flip)
     except:
-        time.sleep(0.2)
+        time.sleep(wait_interval)
         continue
     if str(result[0]).split(" ")[0] == prev_fen:
         time.sleep(wait_interval)
         continue
 
     board = chess.Board(result[0])
+    if not board.is_valid():
+        print("Detected invalid postion, retrying...")
+        time.sleep(wait_interval)
+        continue
     while 1:
         try:
             result = engine.play(board, chess.engine.Limit(time=engine_think_time))
@@ -48,8 +52,10 @@ while True:
         except chess.engine.EngineTerminatedError:
             engine = chess.engine.SimpleEngine.popen_uci(engine_path)
             continue
-
-    print(board)
+    if who == "b":
+        print(board.mirror())
+    else:
+        print(board)
     print("Playing Move: " + str(result.move))
     move = result.move
     try:
@@ -100,6 +106,8 @@ while True:
                     round(board_pos[1] + (square_mar_he * (y_square2 + 3)) - square_mar_he / 2))
     except:
         pass
+
+    pyautogui.moveTo(0,500)
 
     if board.is_game_over():
         print("Looks like we won again! Nice job!")
