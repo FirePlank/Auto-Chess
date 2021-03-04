@@ -19,6 +19,10 @@ You can set the thinking time, the wait time between screenshots and even the de
 
 The bot has been tested on chess.com and lichess.org but should work on pretty much any chess site with a few tweaks!
 
+## Showcase
+I made a little video showcasing the bot which can be viewed on my google drive here: 
+https://drive.google.com/file/d/1XvPG42slB2txM0sW6VHnB4g4HXXF496n/view?usp=sharing
+
 ## Troubleshooting
 If the bot is not detecting the board,
 on chess.com try changing the board sceme to brown and the pieces to classical in the settings.
@@ -27,3 +31,9 @@ the result may differ on different screen resolutions so i recommend trying out 
 which works best for you.
 
 The A.I was trained on lichess so play there for optimal results, but it should work fine on chess.com with a few tweaks!
+
+## Credits
+I have not made the actual detection of the chess board. That has been taken from Elucidation's
+Github that can be found here: https://github.com/Elucidation/tensorflow_chessbot
+
+I did however modify the files to suit my needs better.
