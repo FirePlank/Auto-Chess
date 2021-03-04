@@ -34,6 +34,8 @@ Also i found that changing the board size very slightly smaller made it detect i
 the result may differ on different screen resolutions so i recommend trying out different board sizes and seeing
 which works best for you.
 
+Also disable piece animations cuz I have had the screenshots be taken mid animation making the piece appear to be in a different square.
+
 The A.I was trained on lichess so play there for optimal results, but it should work fine on chess.com and other chess with a few tweaks!
 
 ## Credits
