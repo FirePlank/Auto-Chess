@@ -10,7 +10,7 @@ from chesstenso import tensorflow_chessbot
 from chesstenso import chessboard_finder
 
 wait_interval = 1.5 # The wait time between taking screenshots
-engine_path = r"C:\Users\FirePlank\Desktop\Coding\General Python Scripts\stockfish_13_win_x64_bmi2\stockfish_13_win_x64_bmi2.exe" # The absolute path to the engine excecutable
+engine_path = r"C:\Users\FirePlank\Desktop\Coding\General Python Scripts\stockfish_13_win_x64_bmi2\stockfish_13_win_x64_bmi2.exe" # The absolute path to the engine executable
 engine = chess.engine.SimpleEngine.popen_uci(engine_path)
 engine_think_time = 0.2 # <----- The higher this value is the better the engine plays
 
@@ -41,7 +41,7 @@ while True:
     board = chess.Board(result[0])
     while 1:
         try:
-            result = engine.play(board, chess.engine.Limit(time=engine_think_time)
+            result = engine.play(board, chess.engine.Limit(time=engine_think_time))
             break
         except asyncio.exceptions.TimeoutError:
             continue
@@ -84,6 +84,22 @@ while True:
     time.sleep(random.randint(1, 10) / 15) # Random sleep time between mouse clicks
     pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
                     round(board_pos[1] + (square_mar_he * y_square2) - square_mar_he / 2))
+
+    try:
+        if str(move)[4] == "q":
+            pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                    round(board_pos[1] + (square_mar_he * y_square2) - square_mar_he / 2))
+        elif str(move)[4] == "n":
+            pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                    round(board_pos[1] + (square_mar_he * (y_square2+1)) - square_mar_he / 2))
+        elif str(move)[4] == "r":
+            pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                        round(board_pos[1] + (square_mar_he * (y_square2 + 2)) - square_mar_he / 2))
+        elif str(move)[4] == "b":
+            pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                    round(board_pos[1] + (square_mar_he * (y_square2 + 3)) - square_mar_he / 2))
+    except:
+        pass
 
     if board.is_game_over():
         print("Looks like we won again! Nice job!")
