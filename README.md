@@ -38,7 +38,7 @@ If the bot is detecting the wrong position or saying invalid position,
 disable piece animations cuz I have had the screenshots be taken mid animation making the piece appear to be in a different square.
 Also disable highlight last move cuz that has thrown off the bot as well.
 
-The A.I was trained on lichess so play there for optimal results, but it should work fine on chess.com and other chess with a few tweaks!
+The A.I was trained on lichess so play there for optimal results, but it should work fine on chess.com and other chess sites with a few tweaks!
 
 ## Credits
 I have not made the actual detection of the chess board. That has been taken from Elucidation's
