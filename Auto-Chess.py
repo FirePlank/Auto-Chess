@@ -12,20 +12,22 @@ from chesstenso import chessboard_finder
 wait_interval = 0.5 # The wait time between taking screenshots and retrying commands
 engine_path = r"C:\Users\FirePlank\Desktop\Coding\General Python Scripts\stockfish_13_win_x64_bmi2\stockfish_13_win_x64_bmi2.exe" # The absolute path to the engine executable
 engine = chess.engine.SimpleEngine.popen_uci(engine_path)
-engine_think_time = 0.1 # <----- The higher this value is the better the engine plays
+engine_think_time = 0.1 # <----- The higher this value is the better the engine plays, but also the slower it plays
 
 os.chdir('chesstenso')
 who = input("Are you playing as white or black?: ")
 if who == "white":
     who = "w"
     flip = False
+    prev_fen = "IDEK"
 elif who == "black":
     who = "b"
     flip = True
+    prev_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 else:
     quit("Invalid option given (white/black), please try again.")
 
-prev_fen = "IDEK"
+invalid = 0
 while True:
     image = pyscreenshot.grab()
     image.save("Photos/board.png")
@@ -40,9 +42,15 @@ while True:
 
     board = chess.Board(result[0])
     if not board.is_valid():
-        print("Detected invalid postion, retrying...")
+        if invalid >= 10:
+            print("Unable to detect board postion... Detected board postion was:")
+            print(board)
+            break
+        print("Invalid postion detected, retrying...")
+        invalid+=1
         time.sleep(wait_interval)
         continue
+    invalid = 0
     while 1:
         try:
             result = engine.play(board, chess.engine.Limit(time=engine_think_time))
@@ -52,18 +60,20 @@ while True:
         except chess.engine.EngineTerminatedError:
             engine = chess.engine.SimpleEngine.popen_uci(engine_path)
             continue
+
+    print("Detected Board:")
     if who == "b":
         print(board.mirror())
     else:
         print(board)
     print("Playing Move: " + str(result.move))
+    print()
     move = result.move
     try:
         board.push(result.move)
         prev_fen = str(board.fen().split(" ")[0])
     except:
-        print("Looks like we got checkmated! How is that even possible?")
-        quit()
+        print("Looks like I got checkmated, how is that even possible?")
         break
 
     board_pos = chessboard_finder.main(url=os.path.abspath(r'Photos\board.png'))
@@ -110,6 +120,5 @@ while True:
     pyautogui.moveTo(0,500)
 
     if board.is_game_over():
-        print("Looks like we won again! Nice job!")
-        quit()
+        print("Looks like I won again!")
         break
