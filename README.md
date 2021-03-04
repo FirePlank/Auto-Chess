@@ -23,6 +23,10 @@ The bot has been tested on chess.com and lichess.org but should work on pretty m
 I made a little video showcasing the bot which can be viewed on my google drive here: 
 https://drive.google.com/file/d/1XvPG42slB2txM0sW6VHnB4g4HXXF496n/view?usp=sharing
 
+## Upcoming Features
+- The ability to promoto independedly. Right now when the bot wants to promote the user has to click the promotion piece manually.
+This is easy to implement but i'm just too lazy right now to do it.
+
 ## Troubleshooting
 If the bot is not detecting the board,
 on chess.com try changing the board sceme to brown and the pieces to classical in the settings.
@@ -30,7 +34,7 @@ Also i found that changing the board size very slightly smaller made it detect i
 the result may differ on different screen resolutions so i recommend trying out different board sizes and seeing
 which works best for you.
 
-The A.I was trained on lichess so play there for optimal results, but it should work fine on chess.com with a few tweaks!
+The A.I was trained on lichess so play there for optimal results, but it should work fine on chess.com and other chess with a few tweaks!
 
 ## Credits
 I have not made the actual detection of the chess board. That has been taken from Elucidation's
