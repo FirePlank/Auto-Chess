@@ -34,7 +34,7 @@ Also i found that changing the board size very slightly smaller made it detect i
 the result may differ on different screen resolutions so I recommend trying out different board sizes and seeing
 which works best for you.
 
-If the bot is saying detecting the wrong position or saying invalid position,
+If the bot is detecting the wrong position or saying invalid position,
 disable piece animations cuz I have had the screenshots be taken mid animation making the piece appear to be in a different square.
 Also disable highlight last move cuz that has thrown off the bot as well.
 
