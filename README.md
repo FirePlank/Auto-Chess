@@ -24,7 +24,7 @@ I made a little video showcasing the bot which can be viewed on my google drive 
 https://drive.google.com/file/d/1XvPG42slB2txM0sW6VHnB4g4HXXF496n/view?usp=sharing
 
 ## Upcoming Features
-- The ability to promoto independedly. Right now when the bot wants to promote the user has to click the promotion piece manually.
+- The ability to promote independedly. Right now when the bot wants to promote the user has to click the promotion piece manually.
 This is easy to implement but i'm just too lazy right now to do it.
 
 ## Troubleshooting
