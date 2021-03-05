@@ -15,17 +15,20 @@ engine = chess.engine.SimpleEngine.popen_uci(engine_path)
 engine_think_time = 0.1 # <----- The higher this value is the better the engine plays, but also the slower it plays
 
 os.chdir('chesstenso')
-who = input("Are you playing as white or black?: ")
-if who == "white":
-    who = "w"
-    flip = False
-    prev_fen = "IDEK"
-elif who == "black":
-    who = "b"
-    flip = True
-    prev_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
-else:
-    quit("Invalid option given (white/black), please try again.")
+while 1:
+    who = input("Are you playing as white or black?: ")
+    if who == "white":
+        who = "w"
+        flip = False
+        prev_fen = "IDEK"
+    elif who == "black":
+        who = "b"
+        flip = True
+        prev_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+    else:
+        print("Invalid option given (white/black), please try again.")
+        continue
+    break
 
 invalid = 0
 while True:
@@ -33,6 +36,7 @@ while True:
     image.save("Photos/board.png")
     try:
         result = tensorflow_chessbot.main(img=r'Photos\board.png', active=who, unflip=flip)
+        accuracy = result[1]
     except:
         time.sleep(wait_interval)
         continue
@@ -43,7 +47,7 @@ while True:
     board = chess.Board(result[0])
     if not board.is_valid():
         if invalid >= 10:
-            print("Unable to detect board postion... Detected board postion was:")
+            print(f"Unable to detect board postion... Detected board position with {round(accuracy, 2)}% confidence was:")
             print(board)
             break
         print("Invalid postion detected, retrying...")
@@ -60,8 +64,7 @@ while True:
         except chess.engine.EngineTerminatedError:
             engine = chess.engine.SimpleEngine.popen_uci(engine_path)
             continue
-
-    print("Detected Board:")
+    print(f"Detected board position with {round(accuracy, 2)}% confidence:")
     if who == "b":
         print(board.mirror())
     else:
