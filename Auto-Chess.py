@@ -8,13 +8,22 @@ import random
 import pyscreenshot
 from chesstenso import tensorflow_chessbot
 from chesstenso import chessboard_finder
+from pyclick import HumanClicker
+import pytweening
+from pyclick.humancurve import HumanCurve
 
-wait_interval = 0.5 # The wait time between taking screenshots and retrying commands
+wait_interval = 0.3 # The wait time between taking screenshots and retrying commands
 engine_path = r"C:\Users\FirePlank\Desktop\Coding\General Python Scripts\stockfish_13_win_x64_bmi2\stockfish_13_win_x64_bmi2.exe" # The absolute path to the engine executable
 engine = chess.engine.SimpleEngine.popen_uci(engine_path)
-engine_think_time = 0.1 # <----- The higher this value is the better the engine plays, but also the slower it plays
+engine_think_time = 0.00001 # <----- The higher this value is the better the engine plays, but also the slower it plays
 
 os.chdir('chesstenso')
+while 1:
+    legit = input("Do you want legit mode? (y/n): ")
+    if legit!="y" and legit!="n":
+        print("Please type y or n.")
+        continue
+    break
 while 1:
     who = input("Are you playing as white or black?: ")
     if who == "white":
@@ -47,10 +56,10 @@ while True:
     board = chess.Board(result[0])
     if not board.is_valid():
         if invalid >= 10:
-            print(f"Unable to detect board postion... Detected board position with {round(accuracy, 2)}% confidence was:")
+            print(f"Unable to detect a valid board position... Detected board position with {round(accuracy, 2)}% confidence was:")
             print(board)
             break
-        print("Invalid postion detected, retrying...")
+        print("Invalid board position detected, retrying...")
         invalid+=1
         time.sleep(wait_interval)
         continue
@@ -98,29 +107,77 @@ while True:
         x_square2 = ord(str(move)[2]) - 96
         y_square2 = 9 - int(str(move)[3])
 
-    pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square1) - square_mar_wi / 2),
+
+    if legit == "y":
+        time.sleep(random.randint(1,25)/10)
+        hc = HumanClicker()
+        curve = HumanCurve(pyautogui.position(), (round(board_pos[0] + (square_mar_wi * x_square1) - square_mar_wi / 2),
+                    round(board_pos[1] + (square_mar_he * y_square1) - square_mar_he / 2)), distortionFrequency=0, tweening=pytweening.easeInOutQuad,
+                           offsetBoundaryY=8, offsetBoundaryX=8, targetPoints=random.randint(40,55))
+        hc.move((round(board_pos[0] + (square_mar_wi * x_square1) - square_mar_wi / 2),
+                    round(board_pos[1] + (square_mar_he * y_square1) - square_mar_he / 2)), duration=0.1, humanCurve=curve)
+        pyautogui.click()
+        curve = HumanCurve(pyautogui.position(), (round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                 round(board_pos[1] + (square_mar_he * y_square2) - square_mar_he / 2)),
+                           distortionFrequency=0, tweening=pytweening.easeInOutQuad,
+                           offsetBoundaryY=8, offsetBoundaryX=8, targetPoints=random.randint(40,55))
+        hc.move((round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                 round(board_pos[1] + (square_mar_he * y_square2) - square_mar_he / 2)), duration=0.1, humanCurve = curve)
+        pyautogui.click()
+    else:
+        pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square1) - square_mar_wi / 2),
                     round(board_pos[1] + (square_mar_he * y_square1) - square_mar_he / 2))
-    time.sleep(random.randint(1, 10) / 15) # Random sleep time between mouse clicks
-    pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+        pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
                     round(board_pos[1] + (square_mar_he * y_square2) - square_mar_he / 2))
 
     try:
         if str(move)[4] == "q":
-            pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
-                    round(board_pos[1] + (square_mar_he * y_square2) - square_mar_he / 2))
+            pyautogui.click()
         elif str(move)[4] == "n":
-            pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
-                    round(board_pos[1] + (square_mar_he * (y_square2+1)) - square_mar_he / 2))
+            if legit=="y":
+                curve = HumanCurve(pyautogui.position(),
+                                   (round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                    round(board_pos[1] + (square_mar_he * (y_square2+1)) - square_mar_he / 2)),
+                                   distortionFrequency=0, tweening=pytweening.easeInOutQuad,
+                                   offsetBoundaryY=8, offsetBoundaryX=8, targetPoints=random.randint(30, 45))
+                hc.move((round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                    round(board_pos[1] + (square_mar_he * (y_square2+1)) - square_mar_he / 2)), duration=0.1,
+                        humanCurve=curve)
+                pyautogui.click()
+            else:
+                pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                        round(board_pos[1] + (square_mar_he * (y_square2+1)) - square_mar_he / 2))
         elif str(move)[4] == "r":
-            pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
-                        round(board_pos[1] + (square_mar_he * (y_square2 + 2)) - square_mar_he / 2))
+            if legit == "y":
+                curve = HumanCurve(pyautogui.position(),
+                                   (round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                                    round(board_pos[1] + (square_mar_he * (y_square2 + 2)) - square_mar_he / 2)),
+                                   distortionFrequency=0, tweening=pytweening.easeInOutQuad,
+                                   offsetBoundaryY=8, offsetBoundaryX=8, targetPoints=random.randint(30, 45))
+                hc.move((round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                         round(board_pos[1] + (square_mar_he * (y_square2 + 2)) - square_mar_he / 2)), duration=0.1,
+                        humanCurve=curve)
+                pyautogui.click()
+            else:
+                pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                                round(board_pos[1] + (square_mar_he * (y_square2 + 2)) - square_mar_he / 2))
         elif str(move)[4] == "b":
-            pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
-                    round(board_pos[1] + (square_mar_he * (y_square2 + 3)) - square_mar_he / 2))
+            if legit == "y":
+                curve = HumanCurve(pyautogui.position(),
+                                   (round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                                    round(board_pos[1] + (square_mar_he * (y_square2 + 3)) - square_mar_he / 2)),
+                                   distortionFrequency=0, tweening=pytweening.easeInOutQuad,
+                                   offsetBoundaryY=8, offsetBoundaryX=8, targetPoints=random.randint(30, 45))
+                hc.move((round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                         round(board_pos[1] + (square_mar_he * (y_square2 + 3)) - square_mar_he / 2)), duration=0.1,
+                        humanCurve=curve)
+                pyautogui.click()
+            else:
+                pyautogui.click(round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
+                                round(board_pos[1] + (square_mar_he * (y_square2 + 3)) - square_mar_he / 2))
     except:
         pass
 
-    pyautogui.moveTo(0,500)
 
     if board.is_game_over():
         print("Looks like I won again!")
