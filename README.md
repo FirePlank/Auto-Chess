@@ -15,7 +15,11 @@ Say the side you are playing as and hit enter. The bot will start playing automa
 made by the opponent. You don't have to do anything!
 
 You can play around with the settings in Auto-Chess.py
-You can set the thinking time, the wait time between screenshots and even the delay between mouse presses!
+You can set the thinking time, the wait time between screenshots!
+
+There is also a legit mode that you can use to hide the fact that you are botting and maybe bybass some bot detection softwares.
+It will move the mouse to the pieces in a human like way and it won't click on the very center of the piece but a little on the side
+and it also will wait random intervals and move the mouse at random speeds.
 
 The bot has been tested on chess.com and lichess.org but should work on pretty much any chess site with a few tweaks!
 
@@ -23,9 +27,7 @@ The bot has been tested on chess.com and lichess.org but should work on pretty m
 I made a little video showcasing the bot which can be viewed on my google drive here: 
 https://drive.google.com/file/d/1XvPG42slB2txM0sW6VHnB4g4HXXF496n/view?usp=sharing
 
-## Upcoming Features
-~~- The ability to promote independedly. Right now when the bot wants to promote the user has to click the promotion piece manually.
-This is easy to implement but i'm just too lazy right now to do it.~~
+The video is quite outdated and the bot has been redifined a lot since then so please take a look at the bot yourself!
 
 ## Troubleshooting
 If the bot is not detecting the board,
