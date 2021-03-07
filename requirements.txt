@@ -6,3 +6,6 @@ requests<3,>=2.21.0
 python-chess
 pyautogui
 pyscreenshot
+
+## ONLY IF YOU ARE USING LEGIT MODE
+pyclick
