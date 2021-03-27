@@ -42,6 +42,11 @@ Also disable highlight last move cuz that has thrown off the bot as well.
 
 The A.I was trained on lichess so play there for optimal results, but it should work fine on chess.com and other chess sites with a few tweaks!
 
+## Disclaimer
+This is meant only for educational purposes and I will not be responsible for what happens if you use this script to cheat.
+
+This was not meant to be used as cheating. You can already freely do so without this script. This was just so I can see how machine learning works and how I can implement it. I saw this as a really cool idea to have a script do something automatically. I've always liked these kinds of automation projects. This was not meant to be used as a cheating tool.
+
 ## Credits
 I have not made the actual detection of the chess board. That has been taken from Elucidation's
 Github that can be found here: https://github.com/Elucidation/tensorflow_chessbot
