@@ -12,10 +12,34 @@ from pyclick import HumanClicker
 import pytweening
 from pyclick.humancurve import HumanCurve
 
+nums = {1:"a", 2:"b", 3:"c", 4:"d", 5:"e", 6:"f", 7:"g", 8:"h"}
+def get_uci(board1, board2, who_moved):
+    str_board = str(board1).split("\n")
+    str_board2 = str(board2).split("\n")
+    move = ""
+    flip = False
+    if who_moved == "w":
+        for i in range(8)[::-1]:
+            for x in range(15)[::-1]:
+                if str_board[i][x] != str_board2[i][x]:
+                    if str_board[i][x] == "." and move == "":
+                        flip = True
+                    move+=str(nums.get(round(x/2)+1))+str(9-(i+1))
+    else:
+        for i in range(8):
+            for x in range(15):
+                if str_board[i][x] != str_board2[i][x]:
+                    if str_board[i][x] == "." and move == "":
+                        flip = True
+                    move+=str(nums.get(round(x/2)+1))+str(9-(i+1))
+    if flip:
+        move = move[2]+move[3]+move[0]+move[1]
+    return move
+
 wait_interval = 0.3 # The wait time between taking screenshots and retrying commands
 engine_path = r"Engine Path" # The absolute path to the engine executable
 engine = chess.engine.SimpleEngine.popen_uci(engine_path)
-engine_think_time = 0.1 # <----- The higher this value is the better the engine plays, but also the slower it plays
+engine_think_time = 1 # <----- The higher this value is the better the engine plays, but also the slower it plays
 
 os.chdir('chesstenso')
 while 1:
@@ -28,10 +52,12 @@ while 1:
     who = input("Are you playing as white or black?: ")
     if who == "white":
         who = "w"
+        other = "b"
         flip = False
         prev_fen = "IDEK"
     elif who == "black":
         who = "b"
+        other = "w"
         flip = True
         prev_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
     else:
@@ -40,6 +66,8 @@ while 1:
     break
 
 invalid = 0
+board = chess.Board()
+first_move = True if who == "w"else False
 while True:
     image = pyscreenshot.grab()
     image.save("board.png")
@@ -53,17 +81,23 @@ while True:
         time.sleep(wait_interval)
         continue
 
-    board = chess.Board(result[0])
-    if not board.is_valid():
+    board1 = chess.Board(result[0])
+    if not board1.is_valid():
         if invalid >= 10:
             print(f"Unable to detect a valid board position... Detected board position with {round(accuracy, 2)}% confidence was:")
-            print(board)
+            print(board1)
             break
         print("Invalid board position detected, retrying...")
         invalid+=1
         time.sleep(wait_interval)
         continue
     invalid = 0
+
+    if not first_move:
+        board.push_uci(get_uci(board, board1, other))
+    else:
+        first_move = False
+
     while 1:
         try:
             result = engine.play(board, chess.engine.Limit(time=engine_think_time))
@@ -111,14 +145,14 @@ while True:
     if legit == "y":
         time.sleep(random.randint(1,35)/10)
         hc = HumanClicker()
-        curve = HumanCurve(pyautogui.position(), (round(board_pos[0] + (square_mar_wi * x_square1) - square_mar_wi / 2)-random.randint(-5,5),
-                    round(board_pos[1] + (square_mar_he * y_square1) - square_mar_he / 2)-random.randint(-5,5)), distortionFrequency=0, tweening=pytweening.easeInOutQuad,
+        curve = HumanCurve(pyautogui.position(), (round(board_pos[0] + (square_mar_wi * x_square1) - square_mar_wi / 2)-random.randint(-13,13),
+                    round(board_pos[1] + (square_mar_he * y_square1) - square_mar_he / 2)-random.randint(-13,13)), distortionFrequency=0, tweening=pytweening.easeInOutQuad,
                            offsetBoundaryY=8, offsetBoundaryX=8, targetPoints=random.randint(30,40))
         hc.move((round(board_pos[0] + (square_mar_wi * x_square1) - square_mar_wi / 2),
                     round(board_pos[1] + (square_mar_he * y_square1) - square_mar_he / 2)), duration=0.1, humanCurve=curve)
         pyautogui.click()
         curve = HumanCurve(pyautogui.position(), (round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2)-random.randint(-5,5),
-                 round(board_pos[1] + (square_mar_he * y_square2) - square_mar_he / 2)-random.randint(-5,5)),
+                 round(board_pos[1] + (square_mar_he * y_square2) - square_mar_he / 2)-random.randint(-10,10)),
                            distortionFrequency=0, tweening=pytweening.easeInOutQuad,
                            offsetBoundaryY=8, offsetBoundaryX=8, targetPoints=random.randint(30,40))
         hc.move((round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
@@ -136,8 +170,8 @@ while True:
         elif str(move)[4] == "n":
             if legit=="y":
                 curve = HumanCurve(pyautogui.position(),
-                                   (round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2)-random.randint(-3,3),
-                    round(board_pos[1] + (square_mar_he * (y_square2+1)) - square_mar_he / 2)-random.randint(-3,3)),
+                                   (round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2)-random.randint(-7,7),
+                    round(board_pos[1] + (square_mar_he * (y_square2+1)) - square_mar_he / 2)-random.randint(-7,7)),
                                    distortionFrequency=0, tweening=pytweening.easeInOutQuad,
                                    offsetBoundaryY=8, offsetBoundaryX=8, targetPoints=random.randint(30,40))
                 hc.move((round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
@@ -150,8 +184,8 @@ while True:
         elif str(move)[4] == "r":
             if legit == "y":
                 curve = HumanCurve(pyautogui.position(),
-                                   (round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2)-random.randint(-3,3),
-                                    round(board_pos[1] + (square_mar_he * (y_square2 + 2)) - square_mar_he / 2)-random.randint(-3,3)),
+                                   (round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2)-random.randint(-7,7),
+                                    round(board_pos[1] + (square_mar_he * (y_square2 + 2)) - square_mar_he / 2)-random.randint(-7,7)),
                                    distortionFrequency=0, tweening=pytweening.easeInOutQuad,
                                    offsetBoundaryY=8, offsetBoundaryX=8, targetPoints=random.randint(30,40))
                 hc.move((round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
@@ -164,8 +198,8 @@ while True:
         elif str(move)[4] == "b":
             if legit == "y":
                 curve = HumanCurve(pyautogui.position(),
-                                   (round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2)-random.randint(-3,3),
-                                    round(board_pos[1] + (square_mar_he * (y_square2 + 3)) - square_mar_he / 2)-random.randint(-3,3)),
+                                   (round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2)-random.randint(-7,7),
+                                    round(board_pos[1] + (square_mar_he * (y_square2 + 3)) - square_mar_he / 2)-random.randint(-7,7)),
                                    distortionFrequency=0, tweening=pytweening.easeInOutQuad,
                                    offsetBoundaryY=8, offsetBoundaryX=8, targetPoints=random.randint(30,40))
                 hc.move((round(board_pos[0] + (square_mar_wi * x_square2) - square_mar_wi / 2),
