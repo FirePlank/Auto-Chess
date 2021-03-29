@@ -17,21 +17,39 @@ def get_uci(board1, board2, who_moved):
     str_board = str(board1).split("\n")
     str_board2 = str(board2).split("\n")
     move = ""
+    moved_piece = ""
     flip = False
+    leave = False
     if who_moved == "w":
         for i in range(8)[::-1]:
             for x in range(15)[::-1]:
                 if str_board[i][x] != str_board2[i][x]:
+                    if moved_piece != "" and (str_board[i][x] != moved_piece and str_board2[i][x] != moved_piece):
+                        continue
                     if str_board[i][x] == "." and move == "":
                         flip = True
+                    moved_piece = str_board2[i][x]if str_board[i][x] == "."else str_board[i][x]
                     move+=str(nums.get(round(x/2)+1))+str(9-(i+1))
+                    if len(move) == 4:
+                        leave = True
+                        break
+            if leave:
+                break
     else:
         for i in range(8):
             for x in range(15):
                 if str_board[i][x] != str_board2[i][x]:
+                    if moved_piece != "" and (str_board[i][x] != moved_piece and str_board2[i][x] != moved_piece):
+                        continue
                     if str_board[i][x] == "." and move == "":
                         flip = True
-                    move+=str(nums.get(round(x/2)+1))+str(9-(i+1))
+                    moved_piece = str_board2[i][x] if str_board[i][x] == "." else str_board[i][x]
+                    move += str(nums.get(round(x / 2) + 1)) + str(9 - (i + 1))
+                    if len(move) == 4:
+                        leave = True
+                        break
+            if leave:
+                break
     if flip:
         move = move[2]+move[3]+move[0]+move[1]
     return move
@@ -67,7 +85,7 @@ while 1:
 
 invalid = 0
 board = chess.Board()
-first_move = True if who == "w"else False
+first_move = True
 while True:
     image = pyscreenshot.grab()
     image.save("board.png")
@@ -94,9 +112,17 @@ while True:
     invalid = 0
 
     if not first_move:
-        board.push_uci(get_uci(board, board1, other))
+        try:
+            move_made = get_uci(board, board1, other)
+            print("Detected move was: " + move_made)
+            board.push_uci(move_made)
+            if str(board) != str(board1):
+                board = chess.Board(result[0])
+        except:
+            board = chess.Board(result[0])
     else:
         first_move = False
+        board = chess.Board(result[0])
 
     while 1:
         try:
@@ -108,10 +134,7 @@ while True:
             engine = chess.engine.SimpleEngine.popen_uci(engine_path)
             continue
     print(f"Detected board position with {round(accuracy, 2)}% confidence:")
-    if who == "b":
-        print(board.mirror())
-    else:
-        print(board)
+    print(board)
     print("Playing Move: " + str(result.move))
     print()
     move = result.move
