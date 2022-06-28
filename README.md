@@ -6,6 +6,7 @@ First, just install all the required libaries by doing `pip install -r requireme
  
 You also need to install a chess engine. I recommend stockfish 13. You can download it here: https://stockfishchess.org/download/
 After which you need to add the right path to the exe in the Auto-Chess.py file.
+edit line no 58 and change it to something like `engine_path = r"D:\chess\stockfish\stockfish.exe"` path to your stockfish exe file
 
 After that you can run the script with `python Auto-Chess.py`
 
