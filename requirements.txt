@@ -1,7 +1,7 @@
 beautifulsoup4>=4.6.3,<5
 lxml>=4.2.4,<5
 Pillow
-tensorflow
+tensorflow=2.5.0
 requests<3,>=2.21.0
 python-chess
 pyautogui
