@@ -1,3 +1,5 @@
+import traceback
+
 import chess.engine
 import chess.pgn
 import os
@@ -92,7 +94,9 @@ while True:
     try:
         result = tensorflow_chessbot.main(img='board.png', active=who, unflip=flip)
         accuracy = result[1]
-    except:
+    except Exception as err:
+        print(f"Exception caught: {err}")
+        traceback.print_exc()
         time.sleep(wait_interval)
         continue
     if str(result[0]).split(" ")[0] == prev_fen:
