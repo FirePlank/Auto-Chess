@@ -1,3 +1,5 @@
+This project has been dormant for a few years already and will most likely not work for you when running. I'm sure there are more recent projects that achieve the same functionality that this project does and I encurage you to seek them out.
+
 # Auto-Chess
 A chess bot that automatically calculates the best moves and plays them for you
 
